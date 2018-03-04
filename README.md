@@ -1,5 +1,8 @@
 # Ruby-Yarnlock
 
+[![Gem Version](https://badge.fury.io/rb/yarnlock.svg)](https://badge.fury.io/rb/yarnlock)
+[![Build Status](https://travis-ci.org/hiromi2424/ruby-yarnlock.svg?branch=master)](https://travis-ci.org/sinsoku/bundler_diffgems)
+
 Thin wrapper of [@yarnpkg/lockfile](https://yarnpkg.com/ja/package/@yarnpkg/lockfile) for Ruby.
 
 Note that this is NOT a resolver of every package.
