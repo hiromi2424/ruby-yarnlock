@@ -1,0 +1,17 @@
+{
+  "name": "ruby-yarnlock",
+  "version": "1.0.0",
+  "description": "Thin wrapper for yarn-lockfile js lib",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@yarnpkg/lockfile": "^1.0.0",
+    "eslint": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=4.0.0"
+  },
+  "scripts": {
+    "lint": "./node_modules/.bin/eslint ./scripts/*.js"
+  }
+}
