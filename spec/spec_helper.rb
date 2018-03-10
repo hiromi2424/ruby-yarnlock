@@ -13,4 +13,21 @@ RSpec.configure do |config|
   config.expect_with :rspec do |c|
     c.syntax = :expect
   end
+
+  config.around :example do |example|
+    # Restore default config values
+    config_methods = Yarnlock::Config.instance_methods - Object.instance_methods
+    config_options = config_methods.reject do |option|
+      option.to_s.end_with? '='
+    end
+    before_values = config_options.map do |option|
+      [option, Yarnlock.config.send(option)]
+    end.to_h
+
+    example.run
+
+    before_values.each do |(option, value)|
+      Yarnlock.config.send("#{option}=", value)
+    end
+  end
 end

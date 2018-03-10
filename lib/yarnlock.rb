@@ -1,10 +1,21 @@
 # frozen_string_literal: true
 
 require 'yarnlock/version'
+
+require 'yarnlock/config'
 require 'yarnlock/js_executor'
+
 require 'json'
 
 module Yarnlock
+  def self.config
+    @config ||= Config.new
+  end
+
+  def self.configure
+    yield config
+  end
+
   def self.parse(yarnlock)
     json_string = JsExecutor.execute 'parse', yarnlock
     parsed = JSON.parse json_string
