@@ -7,6 +7,7 @@
 /spec/reports/
 /tmp/
 /node_modules/
+yarn-error.log
 
 # rspec failure tracking
 .rspec_status
