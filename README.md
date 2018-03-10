@@ -1,7 +1,7 @@
 # Ruby-Yarnlock
 
 [![Gem Version](https://badge.fury.io/rb/yarnlock.svg)](https://badge.fury.io/rb/yarnlock)
-[![Build Status](https://travis-ci.org/hiromi2424/ruby-yarnlock.svg?branch=master)](https://travis-ci.org/sinsoku/bundler_diffgems)
+[![Build Status](https://travis-ci.org/hiromi2424/ruby-yarnlock.svg?branch=master)](https://travis-ci.org/hiromi2424/ruby-yarnlock)
 
 Thin wrapper of [@yarnpkg/lockfile](https://yarnpkg.com/ja/package/@yarnpkg/lockfile) for Ruby.
 
@@ -42,6 +42,15 @@ Yarnlock.load 'yarn.lock'
 
 # Stringify parsed object from yarn.lock
 Yarnlock.stringify parsed_hash
+```
+
+You can configure paths for Node.js(`'node'` by default) and JS scripts dir(`'{package root}/scripts'` by default).
+
+```ruby
+Yarnlock.configure do |config|
+  config.script_dir = '/path/to/my/dir'
+  config.node_path = '/usr/local/bin/node'
+end
 ```
 
 ## Development
