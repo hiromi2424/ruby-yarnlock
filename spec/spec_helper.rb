@@ -26,7 +26,7 @@ RSpec.configure do |config|
 
     example.run
 
-    before_values.each do |(option, value)|
+    before_values.each do |option, value|
       Yarnlock.config.send("#{option}=", value)
     end
   end
