@@ -34,7 +34,7 @@ RSpec.describe Yarnlock do
   end
 
   describe '.load' do
-    let(:file_path) { File.expand_path('fixture/yarn.lock', __dir__) }
+    let(:file_path) { File.expand_path('fixtures/yarn.lock', __dir__) }
 
     it 'can load actual file' do
       expect(Yarnlock.load(file_path)).to eq parsed_object
