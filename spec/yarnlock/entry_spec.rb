@@ -34,6 +34,12 @@ RSpec.describe Yarnlock::Entry do
     subject { Yarnlock::Entry.parse(pattern, entry).to_h }
 
     it { is_expected.to eq pattern => entry }
+
+    context 'when empty attribute in entry' do
+      before { entry.delete 'dependencies' }
+
+      it { is_expected.to eq pattern => entry }
+    end
   end
 
   describe '#==' do
