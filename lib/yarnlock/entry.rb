@@ -34,5 +34,9 @@ module Yarnlock
         }
       }
     end
+
+    def ==(other)
+      other.is_a?(self.class) && other.to_h == to_h
+    end
   end
 end
