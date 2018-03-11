@@ -4,6 +4,7 @@ require 'yarnlock/version'
 
 require 'yarnlock/config'
 require 'yarnlock/entry'
+require 'yarnlock/entry/collection'
 require 'yarnlock/js_executor'
 
 require 'json'
