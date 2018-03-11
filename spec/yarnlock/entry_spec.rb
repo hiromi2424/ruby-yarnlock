@@ -43,7 +43,6 @@ RSpec.describe Yarnlock::Entry do
   end
 
   describe '#==' do
-    let(:me) { Yarnlock::Entry.parse pattern, entry }
     let(:other) do
       other = Yarnlock::Entry.new
       other.package = 'string-width'
@@ -57,14 +56,14 @@ RSpec.describe Yarnlock::Entry do
       other
     end
 
-    subject { me == other }
+    subject { Yarnlock::Entry.parse pattern, entry }
 
-    it { is_expected.to be_truthy }
+    it { is_expected.to eq other }
 
     context 'when attribute differs' do
       before { other.package = '@yarnpkg/lockfile' }
 
-      it { is_expected.to be_falsey }
+      it { is_expected.not_to eq other }
     end
   end
 end

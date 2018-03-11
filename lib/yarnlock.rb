@@ -21,16 +21,21 @@ module Yarnlock
   def self.parse(yarnlock)
     json_string = JsExecutor.execute 'parse', yarnlock
     parsed = JSON.parse json_string
+
     raise "An error was occurred when parsing yarn.lock: #{parsed}" unless parsed.is_a? Hash
     raise "Could not parse yarn.lock: #{parsed['reason']}" unless parsed['type'] == 'success'
+
+    return parsed['object'] unless config.return_collection
     Entry::Collection.parse parsed['object']
   end
 
   def self.stringify(object)
     json_string = JsExecutor.execute 'stringify', JSON.generate(object)
     parsed = JSON.parse json_string
+
     raise "An error was occurred when stringing object: #{parsed}" unless parsed.is_a? Hash
     raise "Could not stringing object: #{parsed['reason']}" unless parsed['type'] == 'success'
+
     parsed['yarnlock']
   end
 

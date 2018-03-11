@@ -36,6 +36,14 @@ RSpec.describe Yarnlock do
       it 'parses correct string' do
         expect(Yarnlock.parse(yarnlock)).to eq parsed
       end
+
+      context 'when disable return_collection option' do
+        before { Yarnlock.config.return_collection = false }
+
+        it 'returns pure hash value' do
+          expect(Yarnlock.parse(yarnlock)).to eq parsed.as_json
+        end
+      end
     end
   end
 
