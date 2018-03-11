@@ -12,13 +12,19 @@ RSpec.describe Yarnlock do
         resolved "https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.0.0.tgz#33d1dbb659a23b81f87f048762b35a446172add3"
     YARNLOCK
   end
-  let(:parsed_object) do
-    {
-      '@yarnpkg/lockfile@^1.0.0' => {
-        'version' => '1.0.0',
-        'resolved' => 'https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.0.0.tgz#33d1dbb659a23b81f87f048762b35a446172add3'
+  let(:parsed) do
+    Yarnlock::Entry::Collection.new.merge(
+      '@yarnpkg/lockfile' => {
+        '1.0.0' => begin
+          entry = Yarnlock::Entry.new
+          entry.version = '1.0.0'
+          entry.package = '@yarnpkg/lockfile'
+          entry.version_ranges = ['^1.0.0']
+          entry.resolved = 'https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.0.0.tgz#33d1dbb659a23b81f87f048762b35a446172add3'
+          entry
+        end
       }
-    }
+    )
   end
 
   describe '.parse' do
@@ -28,7 +34,7 @@ RSpec.describe Yarnlock do
 
     context 'when correct text was passed' do
       it 'parses correct string' do
-        expect(Yarnlock.parse(yarnlock)).to eq parsed_object
+        expect(Yarnlock.parse(yarnlock)).to eq parsed
       end
     end
   end
@@ -37,13 +43,13 @@ RSpec.describe Yarnlock do
     let(:file_path) { File.expand_path('fixtures/yarn.lock', __dir__) }
 
     it 'can load actual file' do
-      expect(Yarnlock.load(file_path)).to eq parsed_object
+      expect(Yarnlock.load(file_path)).to eq parsed
     end
   end
 
   describe '.stringify' do
     it 'stringifies correct string' do
-      expect(Yarnlock.stringify(parsed_object)).to eq yarnlock
+      expect(Yarnlock.stringify(parsed)).to eq yarnlock
     end
   end
 end

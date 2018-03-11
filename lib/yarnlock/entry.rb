@@ -35,6 +35,14 @@ module Yarnlock
       }
     end
 
+    def as_json(_options = {})
+      to_h
+    end
+
+    def to_json(*options)
+      as_json(*options).to_json(*options)
+    end
+
     def ==(other)
       other.is_a?(self.class) && other.to_h == to_h
     end

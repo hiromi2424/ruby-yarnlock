@@ -12,6 +12,20 @@ module Yarnlock
         end
         collection
       end
+
+      def as_json(_options = {})
+        entries = {}
+        each_value do |versions|
+          versions.each_value do |entry|
+            entries.merge! entry.to_h
+          end
+        end
+        entries
+      end
+
+      def to_json(*options)
+        as_json(*options).to_json(*options)
+      end
     end
   end
 end
