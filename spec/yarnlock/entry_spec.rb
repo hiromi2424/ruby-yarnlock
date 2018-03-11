@@ -14,7 +14,7 @@ RSpec.describe Yarnlock::Entry do
     }
   end
 
-  describe '#parse' do
+  describe '.parse' do
     subject { Yarnlock::Entry.parse pattern, entry }
 
     context 'when multiple version ranges specified' do
