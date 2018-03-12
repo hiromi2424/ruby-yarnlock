@@ -13,5 +13,4 @@ yarn-error.log
 .rspec_status
 
 # lock files
-/yarn.lock
 /Gemfile.lock
