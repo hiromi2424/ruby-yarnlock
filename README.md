@@ -60,7 +60,7 @@ The value is `Yarnlock.Entry` object that represents a entry of `yarn.lock`.
 `Yarnlock.Entry` is a pure class that holds parsed information from a entry. You can access attribute to get information what you need:
 
 - `package` `[String]` The package name. Same as 1st level key of `Yarnlock::Entry::Collection`.
-- `package` `[String]` Resolved version. Same as 2nd level key of `Yarnlock::Entry::Collection`.
+- `version` `[String]` Resolved version. Same as 2nd level key of `Yarnlock::Entry::Collection`.
 - `version_ranges` `[Array]` Version ranges, this holds multiple ranges like `['^2.1.0', '^2.1.1']`.
   - You can see like `"@yarnpkg/lockfile@^1.0.0":` in `yarn.lock`, range of versions is `^1.0.0` of that, specified by `*dependencies` at `package.json` and its sub dependencies.
 - `resolved` `[String]` Resolved registry location for tar ball.
