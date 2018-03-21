@@ -1,26 +1,33 @@
 # frozen_string_literal: true
 
+require 'semantic'
+
 module Yarnlock
   class Entry
-    class Collection < Hash
+    module Collection
       def self.parse(raw_entries)
-        collection = new
-        raw_entries.each do |pattern, raw_entry|
-          entry = Yarnlock::Entry.parse pattern, raw_entry
-          collection[entry.package] ||= {}
-          collection[entry.package][entry.version] = entry
+        raw_entries.map do |pattern, raw_entry|
+          Entry.parse pattern, raw_entry
+        end.extend(self)
+      end
+
+      def package_with_versions
+        each_with_object({}) do |entry, packages|
+          packages[entry.package] ||= {}
+          packages[entry.package][entry.version] = entry
         end
-        collection
+      end
+
+      def highest_version_packages
+        each_with_object({}) do |entry, packages|
+          packages[entry.package] = [entry, packages[entry.package]].compact.max_by(&:version)
+        end
       end
 
       def as_json(_options = {})
-        entries = {}
-        each_value do |versions|
-          versions.each_value do |entry|
-            entries.merge! entry.to_h
-          end
+        each_with_object({}) do |entry, entries|
+          entries.merge! entry.to_h
         end
-        entries
       end
 
       def to_json(*options)

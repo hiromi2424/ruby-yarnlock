@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'semantic/core_ext'
+
 module Yarnlock
   class Entry
     attr_accessor :package, :version_ranges, :version, :resolved, :dependencies
@@ -15,7 +17,7 @@ module Yarnlock
         @version_ranges << version_range
       end
 
-      @version = entry['version']
+      @version = entry['version'].to_version
       @resolved = entry['resolved']
       @dependencies = entry['dependencies']
 
@@ -28,7 +30,7 @@ module Yarnlock
       end.join(', ')
       {
         pattern => {
-          'version' => version,
+          'version' => version.to_s,
           'resolved' => resolved,
           'dependencies' => dependencies
         }.reject { |_, v| v.nil? } # Hash#compact is not supported in Ruby < 2.4

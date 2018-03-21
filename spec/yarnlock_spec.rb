@@ -13,23 +13,17 @@ RSpec.describe Yarnlock do
     YARNLOCK
   end
   let(:parsed) do
-    Yarnlock::Entry::Collection.new.merge(
-      '@yarnpkg/lockfile' => {
-        '1.0.0' => begin
-          entry = Yarnlock::Entry.new
-          entry.version = '1.0.0'
-          entry.package = '@yarnpkg/lockfile'
-          entry.version_ranges = ['^1.0.0']
-          entry.resolved = 'https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.0.0.tgz#33d1dbb659a23b81f87f048762b35a446172add3'
-          entry
-        end
-      }
-    )
+    entry = Yarnlock::Entry.new
+    entry.version = '1.0.0'
+    entry.package = '@yarnpkg/lockfile'
+    entry.version_ranges = ['^1.0.0']
+    entry.resolved = 'https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.0.0.tgz#33d1dbb659a23b81f87f048762b35a446172add3'
+    [entry].extend(Yarnlock::Entry::Collection)
   end
 
   describe '.parse' do
     context 'when invalid text was passed' do
-      it { expect { Yarnlock.parse 'Invalid' }.to raise_error(/^Could not parse/) }
+      it { expect { Yarnlock.parse 'Invalid' }.to raise_error(/\ACould not parse/) }
     end
 
     context 'when correct text was passed' do
@@ -41,7 +35,12 @@ RSpec.describe Yarnlock do
         before { Yarnlock.config.return_collection = false }
 
         it 'returns pure hash value' do
-          expect(Yarnlock.parse(yarnlock)).to eq parsed.as_json
+          expect(Yarnlock.parse(yarnlock)).to eq(
+            '@yarnpkg/lockfile@^1.0.0' => {
+              'version' => '1.0.0',
+              'resolved' => 'https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.0.0.tgz#33d1dbb659a23b81f87f048762b35a446172add3'
+            }
+          )
         end
       end
     end

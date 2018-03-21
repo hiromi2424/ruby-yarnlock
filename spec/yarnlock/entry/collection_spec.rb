@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'semantic/core_ext'
+
 RSpec.describe Yarnlock::Entry::Collection do
   let(:pattern_1) { 'resolve@1.1.7' }
   let(:pattern_2) { 'resolve@^1.1.6, resolve@^1.1.7' }
@@ -15,19 +17,64 @@ RSpec.describe Yarnlock::Entry::Collection do
       'resolved' => 'https://registry.yarnpkg.com/resolve/-/resolve-1.3.3.tgz#655907c3469a8680dc2de3a275a8fdd69691f0e5'
     }
   end
+  let(:raw_hash) { { pattern_1 => entry_1, pattern_2 => entry_2 } }
+  let(:array_expression) do
+    [
+      Yarnlock::Entry.parse(pattern_1, entry_1),
+      Yarnlock::Entry.parse(pattern_2, entry_2)
+    ]
+  end
 
   describe '.parse' do
-    subject { Yarnlock::Entry::Collection.parse(pattern_1 => entry_1, pattern_2 => entry_2) }
+    subject { Yarnlock::Entry::Collection.parse(raw_hash) }
 
-    let(:expected) do
-      Yarnlock::Entry::Collection.new.merge(
+    it { is_expected.to eq array_expression }
+    it { is_expected.to be_a_kind_of Yarnlock::Entry::Collection }
+  end
+
+  let(:yarnlock_entry) do
+    Yarnlock::Entry.parse('@yarnpkg/lockfile@^1.0.0',
+                          'version' => '1.0.0',
+                          'resolved' => 'https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.0.0.tgz#33d1dbb659a23b81f87f048762b35a446172add3')
+  end
+  let(:collection) do
+    (array_expression + [
+      Yarnlock::Entry.parse(pattern_1, entry_1),
+      Yarnlock::Entry.parse(pattern_2, entry_2),
+      yarnlock_entry
+    ]).extend(Yarnlock::Entry::Collection)
+  end
+
+  describe '.package_with_versions' do
+    subject { collection.package_with_versions }
+
+    it 'returns 2 dimensional hash' do
+      is_expected.to eq(
         'resolve' => {
-          '1.1.7' => Yarnlock::Entry.parse(pattern_1, entry_1),
-          '1.3.3' => Yarnlock::Entry.parse(pattern_2, entry_2)
+          '1.1.7'.to_version => Yarnlock::Entry.parse(pattern_1, entry_1),
+          '1.3.3'.to_version => Yarnlock::Entry.parse(pattern_2, entry_2)
+        },
+        '@yarnpkg/lockfile' => {
+          '1.0.0'.to_version => yarnlock_entry
         }
       )
     end
+  end
 
-    it { is_expected.to eq expected }
+  describe '.highest_version_packages' do
+    subject { collection.highest_version_packages }
+
+    it 'returns highest packages as hash' do
+      is_expected.to eq(
+        'resolve' => Yarnlock::Entry.parse(pattern_2, entry_2),
+        '@yarnpkg/lockfile' => yarnlock_entry
+      )
+    end
+  end
+
+  describe '.as_json' do
+    subject { array_expression.extend(Yarnlock::Entry::Collection).as_json }
+
+    it { is_expected.to eq raw_hash }
   end
 end

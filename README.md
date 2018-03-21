@@ -36,37 +36,72 @@ require 'yarnlock'
 # Parse string as in yarn.lock:
 parsed = Yarnlock.parse 'yarn_lock_text'
 
+# Stringify parsed object from yarn.lock
+string = Yarnlock.stringify parsed
+
 # Load from file path:
 parsed = Yarnlock.load 'yarn.lock'
-
-# Stringify parsed object from yarn.lock
-Yarnlock.stringify parsed
 ```
 
 ### Parsed object structure
 
-`Yarnlock.parse` returns `Yarnlock::Entry::Collection` object that is actually extends `Hash` and is holding each entries defined at `yarn.lock`.
+Original `parse` function of `@yarnpkg/lockfile` returns pure JSON object in javascript context, so that this library parse JSON and convert it to ruby object for general purpose.
 
-That hash has 3 dimension, such like:
+`Yarnlock.parse` returns just an `array` containing each entries defined at `yarn.lock`. Entries are represented as `Yarnlock::Entry` instances. Additionally array extends `Yarnlock::Entry::Collection` module to provide some useful enumeration and JSON serialization.
+
+## API
+
+### `Yarnlock::Entry::Collection`
+
+is a module that is used for `Yarnlock.stringify` to make `string` as same as `yarn.lock`. In other words, You can modify entries and generate customized `yarn.lock` programmatically. Also it provides an enumeration method to retrieve entries for each packages:
+
+#### `package_with_versions` `[Hash<String, <String, Yarnlock::Entry>>]`
+
+returns 2 dimensional hash for iterate package with every resolved versions.
+
+- The key of 1st level is the package name that is found on [Yarn repository](https://yarnpkg.com), can be used for dependency specification in package.json.
+- The key of 2nd level is the resolved version for range of versions. It is parsed as `Semantic::Version`
+- The value is `Yarnlock.Entry` instance.
+
+For example:
 
 ```ruby
-parsed['@yarnpkg/lockfile']['1.0.0'] = Yarnlock::Entry.new
+yarnlock = Yarnlock.load 'yarn.lock'
+yarnlock.package_with_versions do |package, versions|
+  puts package # '@yarnpkg/lockfile'
+  versions.each do |version, entry|
+    puts version # <Semantic::Version:0x007fe286056110 @major=1, @minor=0, @patch=0, @pre=nil, @build=nil, @version="1.0.0">
+    puts entry.resolved # 'https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.0.0.tgz#33d1dbb659a23b81f87f048762b35a446172add3'
+  end
+end
 ```
 
-The key of 1st level is the package name that is found on [Yarn repository](https://yarnpkg.com), can be used for dependency specification in `package.json`.
-The key of 2nd level is the resolved version for range of versions.
-The value is `Yarnlock.Entry` object that represents a entry of `yarn.lock`.
 
-`Yarnlock.Entry` is a pure class that holds parsed information from a entry. You can access attribute to get information what you need:
+#### `highest_version_packages` `[Hash<String, Yarnlock::Entry>]`
 
-- `package` `[String]` The package name. Same as 1st level key of `Yarnlock::Entry::Collection`.
-- `version` `[String]` Resolved version. Same as 2nd level key of `Yarnlock::Entry::Collection`.
+returns hash keyed by package, valued by entry. Since `yarn install` command will install highest resolved version of each package, You can take such package + version pair like:
+
+```ruby
+yarnlock = Yarnlock.load 'yarn.lock'
+yarnlock.highest_version_packages do |package, entry|
+  puts package # '@yarnpkg/lockfile'
+  puts entry.version # <Semantic::Version:0x007fe286056110 @major=1, @minor=0, @patch=0, @pre=nil, @build=nil, @version="1.0.0">
+  puts entry.resolved # 'https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.0.0.tgz#33d1dbb659a23b81f87f048762b35a446172add3'
+end
+```
+
+### `Yarnlock::Entry`
+
+is a pure class that holds parsed information from a entry. You can access attribute to get information what you need:
+
+- `package` `[String]` The package name.
+- `version` `[Semantic::Version]` Resolved version. This is not a just string but a `Semantic::Version` object to useful for compare for. See  [jlindsey/semantic: Ruby Semantic Version class](https://github.com/jlindsey/semantic/) for details.
 - `version_ranges` `[Array]` Version ranges, this holds multiple ranges like `['^2.1.0', '^2.1.1']`.
   - You can see like `"@yarnpkg/lockfile@^1.0.0":` in `yarn.lock`, range of versions is `^1.0.0` of that, specified by `*dependencies` at `package.json` and its sub dependencies.
 - `resolved` `[String]` Resolved registry location for tar ball.
 - `dependencies` `[Hash]` Sub dependencies keyed by package name and valued by version range.
 
-### Options
+## Options
 
 You can configure some options to change behavior like:
 
