@@ -59,5 +59,13 @@ module Yarnlock
     def ==(other)
       other.is_a?(self.class) && other.to_h == to_h
     end
+
+    def eql?(other)
+      self == other
+    end
+
+    def hash
+      to_h.hash
+    end
   end
 end

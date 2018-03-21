@@ -42,20 +42,20 @@ RSpec.describe Yarnlock::Entry do
     end
   end
 
-  describe '#==' do
-    let(:other) do
-      Yarnlock::Entry.new(
-        package: 'string-width',
-        version_ranges: %w[^2.1.0 ^2.1.1],
-        version: '2.1.1',
-        resolved: 'https://registry.yarnpkg.com/string-width/-/string-width-2.1.1.tgz#ab93f27a8dc13d28cac815c462143a6d9012ae9e',
-        dependencies: {
-          'is-fullwidth-code-point' => '^2.0.0',
-          'strip-ansi' => '^4.0.0'
-        }
-      )
-    end
+  let(:other) do
+    Yarnlock::Entry.new(
+      package: 'string-width',
+      version_ranges: %w[^2.1.0 ^2.1.1],
+      version: '2.1.1',
+      resolved: 'https://registry.yarnpkg.com/string-width/-/string-width-2.1.1.tgz#ab93f27a8dc13d28cac815c462143a6d9012ae9e',
+      dependencies: {
+        'is-fullwidth-code-point' => '^2.0.0',
+        'strip-ansi' => '^4.0.0'
+      }
+    )
+  end
 
+  describe '#==' do
     subject { Yarnlock::Entry.parse(pattern, entry) == other }
 
     it { is_expected.to be_truthy }
@@ -64,6 +64,30 @@ RSpec.describe Yarnlock::Entry do
       before { other.package = '@yarnpkg/lockfile' }
 
       it { is_expected.to be_falsey }
+    end
+  end
+
+  describe '#eql?' do
+    subject { Yarnlock::Entry.parse(pattern, entry).eql? other }
+
+    it { is_expected.to be_truthy }
+
+    context 'when an attribute differs' do
+      before { other.package = '@yarnpkg/lockfile' }
+
+      it { is_expected.to be_falsey }
+    end
+  end
+
+  describe '#hash' do
+    subject { Yarnlock::Entry.parse(pattern, entry).hash }
+
+    it { is_expected.to be other.hash }
+
+    context 'when an attribute differs' do
+      before { other.package = '@yarnpkg/lockfile' }
+
+      it { is_expected.not_to be other.hash }
     end
   end
 end
