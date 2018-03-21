@@ -44,26 +44,26 @@ RSpec.describe Yarnlock::Entry do
 
   describe '#==' do
     let(:other) do
-      other = Yarnlock::Entry.new
-      other.package = 'string-width'
-      other.version_ranges = %w[^2.1.0 ^2.1.1]
-      other.version = '2.1.1'
-      other.resolved = 'https://registry.yarnpkg.com/string-width/-/string-width-2.1.1.tgz#ab93f27a8dc13d28cac815c462143a6d9012ae9e'
-      other.dependencies = {
-        'is-fullwidth-code-point' => '^2.0.0',
-        'strip-ansi' => '^4.0.0'
-      }
-      other
+      Yarnlock::Entry.new(
+        package: 'string-width',
+        version_ranges: %w[^2.1.0 ^2.1.1],
+        version: '2.1.1',
+        resolved: 'https://registry.yarnpkg.com/string-width/-/string-width-2.1.1.tgz#ab93f27a8dc13d28cac815c462143a6d9012ae9e',
+        dependencies: {
+          'is-fullwidth-code-point' => '^2.0.0',
+          'strip-ansi' => '^4.0.0'
+        }
+      )
     end
 
-    subject { Yarnlock::Entry.parse pattern, entry }
+    subject { Yarnlock::Entry.parse(pattern, entry) == other }
 
-    it { is_expected.to eq other }
+    it { is_expected.to be_truthy }
 
-    context 'when attribute differs' do
+    context 'when an attribute differs' do
       before { other.package = '@yarnpkg/lockfile' }
 
-      it { is_expected.not_to eq other }
+      it { is_expected.to be_falsey }
     end
   end
 end

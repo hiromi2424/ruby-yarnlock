@@ -13,11 +13,12 @@ RSpec.describe Yarnlock do
     YARNLOCK
   end
   let(:parsed) do
-    entry = Yarnlock::Entry.new
-    entry.version = '1.0.0'
-    entry.package = '@yarnpkg/lockfile'
-    entry.version_ranges = ['^1.0.0']
-    entry.resolved = 'https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.0.0.tgz#33d1dbb659a23b81f87f048762b35a446172add3'
+    entry = Yarnlock::Entry.new(
+      version: '1.0.0',
+      package: '@yarnpkg/lockfile',
+      version_ranges: ['^1.0.0'],
+      resolved: 'https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.0.0.tgz#33d1dbb659a23b81f87f048762b35a446172add3'
+    )
     [entry].extend(Yarnlock::Entry::Collection)
   end
 

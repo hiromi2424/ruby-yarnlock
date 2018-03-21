@@ -1,27 +1,38 @@
 # frozen_string_literal: true
 
-require 'semantic/core_ext'
+require 'semantic'
 
 module Yarnlock
   class Entry
-    attr_accessor :package, :version_ranges, :version, :resolved, :dependencies
+    attr_accessor :package, :version_ranges, :resolved, :dependencies
+    attr_reader :version
 
     def self.parse(pattern, entry)
       new.parse pattern, entry
     end
 
     def parse(pattern, entry)
-      @version_ranges = []
+      self.version_ranges = []
       pattern.split(', ').each do |package_version|
-        @package, version_range = package_version.split(/(?!^)@/)
-        @version_ranges << version_range
+        self.package, version_range = package_version.split(/(?!^)@/)
+        version_ranges << version_range
       end
 
-      @version = entry['version'].to_version
-      @resolved = entry['resolved']
-      @dependencies = entry['dependencies']
+      self.version = entry['version']
+      self.resolved = entry['resolved']
+      self.dependencies = entry['dependencies']
 
       self
+    end
+
+    def initialize(attributes = {})
+      attributes.each do |key, val|
+        send "#{key}=", val
+      end
+    end
+
+    def version=(version)
+      @version = version.is_a?(String) ? Semantic::Version.new(version) : version
     end
 
     def to_h

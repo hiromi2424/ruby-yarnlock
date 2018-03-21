@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'semantic'
-
 module Yarnlock
   class Entry
     module Collection
