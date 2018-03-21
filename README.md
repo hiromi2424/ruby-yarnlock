@@ -67,7 +67,7 @@ For example:
 
 ```ruby
 yarnlock = Yarnlock.load 'yarn.lock'
-yarnlock.package_with_versions do |package, versions|
+yarnlock.package_with_versions.each do |package, versions|
   puts package # '@yarnpkg/lockfile'
   versions.each do |version, entry|
     puts version # <Semantic::Version:0x007fe286056110 @major=1, @minor=0, @patch=0, @pre=nil, @build=nil, @version="1.0.0">
@@ -83,7 +83,7 @@ returns hash keyed by package, valued by entry. Since `yarn install` command wil
 
 ```ruby
 yarnlock = Yarnlock.load 'yarn.lock'
-yarnlock.highest_version_packages do |package, entry|
+yarnlock.highest_version_packages.each do |package, entry|
   puts package # '@yarnpkg/lockfile'
   puts entry.version # <Semantic::Version:0x007fe286056110 @major=1, @minor=0, @patch=0, @pre=nil, @build=nil, @version="1.0.0">
   puts entry.resolved # 'https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.0.0.tgz#33d1dbb659a23b81f87f048762b35a446172add3'
