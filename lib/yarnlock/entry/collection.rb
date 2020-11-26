@@ -11,8 +11,8 @@ module Yarnlock
 
       def package_with_versions
         each_with_object({}) do |entry, packages|
-          packages[entry.package] ||= {}
-          packages[entry.package][entry.version.to_s] = entry
+          packages[entry.package] ||= []
+          packages[entry.package] << entry
         end
       end
 

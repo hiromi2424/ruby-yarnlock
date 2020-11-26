@@ -14,3 +14,4 @@ yarn-error.log
 
 # lock files
 /Gemfile.lock
+**/*.sw*
