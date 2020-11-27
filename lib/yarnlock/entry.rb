@@ -44,7 +44,7 @@ module Yarnlock
           'version' => version.to_s,
           'resolved' => resolved,
           'dependencies' => dependencies
-        }.reject { |_, v| v.nil? } # Hash#compact is not supported in Ruby < 2.4
+        }.compact
       }
     end
 
