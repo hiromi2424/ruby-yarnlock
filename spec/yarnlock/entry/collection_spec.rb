@@ -3,25 +3,25 @@
 require 'semantic/core_ext'
 
 RSpec.describe Yarnlock::Entry::Collection do
-  let(:pattern_1) { 'resolve@1.1.7' }
-  let(:pattern_2) { 'resolve@^1.1.6, resolve@^1.1.7' }
-  let(:entry_1) do
+  let(:pattern1) { 'resolve@1.1.7' }
+  let(:pattern2) { 'resolve@^1.1.6, resolve@^1.1.7' }
+  let(:entry1) do
     {
       'version' => '1.1.7',
       'resolved' => 'https://registry.yarnpkg.com/resolve/-/resolve-1.1.7.tgz#203114d82ad2c5ed9e8e0411b3932875e889e97b'
     }
   end
-  let(:entry_2) do
+  let(:entry2) do
     {
       'version' => '1.3.3',
       'resolved' => 'https://registry.yarnpkg.com/resolve/-/resolve-1.3.3.tgz#655907c3469a8680dc2de3a275a8fdd69691f0e5'
     }
   end
-  let(:raw_hash) { { pattern_1 => entry_1, pattern_2 => entry_2 } }
+  let(:raw_hash) { { pattern1 => entry1, pattern2 => entry2 } }
   let(:array_expression) do
     [
-      Yarnlock::Entry.parse(pattern_1, entry_1),
-      Yarnlock::Entry.parse(pattern_2, entry_2)
+      Yarnlock::Entry.parse(pattern1, entry1),
+      Yarnlock::Entry.parse(pattern2, entry2)
     ]
   end
 
@@ -39,8 +39,8 @@ RSpec.describe Yarnlock::Entry::Collection do
   end
   let(:collection) do
     (array_expression + [
-      Yarnlock::Entry.parse(pattern_1, entry_1),
-      Yarnlock::Entry.parse(pattern_2, entry_2),
+      Yarnlock::Entry.parse(pattern1, entry1),
+      Yarnlock::Entry.parse(pattern2, entry2),
       yarnlock_entry
     ]).extend(Yarnlock::Entry::Collection)
   end
@@ -51,8 +51,8 @@ RSpec.describe Yarnlock::Entry::Collection do
     it 'returns 2 dimensional hash' do
       is_expected.to eq(
         'resolve' => {
-          '1.1.7'.to_version => Yarnlock::Entry.parse(pattern_1, entry_1),
-          '1.3.3'.to_version => Yarnlock::Entry.parse(pattern_2, entry_2)
+          '1.1.7'.to_version => Yarnlock::Entry.parse(pattern1, entry1),
+          '1.3.3'.to_version => Yarnlock::Entry.parse(pattern2, entry2)
         },
         '@yarnpkg/lockfile' => {
           '1.0.0'.to_version => yarnlock_entry
@@ -66,7 +66,7 @@ RSpec.describe Yarnlock::Entry::Collection do
 
     it 'returns highest packages as hash' do
       is_expected.to eq(
-        'resolve' => Yarnlock::Entry.parse(pattern_2, entry_2),
+        'resolve' => Yarnlock::Entry.parse(pattern2, entry2),
         '@yarnpkg/lockfile' => yarnlock_entry
       )
     end

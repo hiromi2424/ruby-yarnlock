@@ -5,8 +5,8 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@yarnpkg/lockfile": "^1.0.0",
-    "eslint": "^4.18.2"
+    "@yarnpkg/lockfile": "^1.1.0",
+    "eslint": "^7.14.0"
   },
   "engines": {
     "node": ">=4.0.0"

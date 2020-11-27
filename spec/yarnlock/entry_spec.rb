@@ -5,7 +5,7 @@ RSpec.describe Yarnlock::Entry do
   let(:pattern_yarnlock) { '@yarnpkg/lockfile@^1.0.0' }
   let(:entry) do
     {
-      'version' =>  '2.1.1',
+      'version' => '2.1.1',
       'resolved' => 'https://registry.yarnpkg.com/string-width/-/string-width-2.1.1.tgz#ab93f27a8dc13d28cac815c462143a6d9012ae9e',
       'dependencies' => {
         'is-fullwidth-code-point' => '^2.0.0',

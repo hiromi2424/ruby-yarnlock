@@ -26,6 +26,7 @@ module Yarnlock
     raise "Could not parse yarn.lock: #{parsed['reason']}" if parsed['type'] == 'failure'
 
     return parsed['object'] unless config.return_collection
+
     Entry::Collection.parse parsed['object']
   end
 
