@@ -1,7 +1,7 @@
 # Ruby-Yarnlock
 
 [![Gem Version](https://badge.fury.io/rb/yarnlock.svg)](https://badge.fury.io/rb/yarnlock)
-[![Build Status](https://travis-ci.org/hiromi2424/ruby-yarnlock.svg?branch=master)](https://travis-ci.org/hiromi2424/ruby-yarnlock)
+[![Build Status](https://travis-ci.com/hiromi2424/ruby-yarnlock.svg?branch=master)](https://travis-ci.com/hiromi2424/ruby-yarnlock)
 
 Thin wrapper of [@yarnpkg/lockfile](https://yarnpkg.com/en/package/@yarnpkg/lockfile) for Ruby.
 
