@@ -38,11 +38,7 @@ RSpec.describe Yarnlock::Entry::Collection do
                           'resolved' => 'https://registry.yarnpkg.com/@yarnpkg/lockfile/-/lockfile-1.0.0.tgz#33d1dbb659a23b81f87f048762b35a446172add3')
   end
   let(:collection) do
-    (array_expression + [
-      Yarnlock::Entry.parse(pattern1, entry1),
-      Yarnlock::Entry.parse(pattern2, entry2),
-      yarnlock_entry
-    ]).extend(Yarnlock::Entry::Collection)
+    (array_expression + [yarnlock_entry]).extend(Yarnlock::Entry::Collection)
   end
 
   describe '.package_with_versions' do

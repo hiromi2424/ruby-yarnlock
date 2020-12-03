@@ -53,7 +53,17 @@ Original `parse` function of `@yarnpkg/lockfile` returns pure JSON object in jav
 
 ### `Yarnlock::Entry::Collection`
 
-is a module that is used for `Yarnlock.stringify` to make `string` as same as `yarn.lock`. In other words, You can modify entries and generate customized `yarn.lock` programmatically. Also it provides an enumeration method to retrieve entries for each packages:
+is a module that is used for `Yarnlock.stringify` to make `string` as same as `yarn.lock`. In other words, You can modify entries and generate customized `yarn.lock` programmatically. Collection is just a instance of `Array`:
+
+```ruby
+yarnlock = Yarnlock.load 'yarn.lock'
+# returns like '@yarnpkg/lockfile' => [<Yarnlock::Entry>]
+yarnlock.group_by(&:package)
+# returns like ["resolve@1.1.7", "resolve@1.3.3"]
+yarnlock.map { |entry| "#{entry.package}@#{entry.version}" }.sort
+```
+
+Also it provides an enumeration method to retrieve entries for each packages easily:
 
 #### `package_with_versions` `[Hash<String, <String, Yarnlock::Entry>>]`
 
@@ -75,7 +85,6 @@ yarnlock.package_with_versions.each do |package, versions|
   end
 end
 ```
-
 
 #### `highest_version_packages` `[Hash<String, Yarnlock::Entry>]`
 
